@@ -43,15 +43,13 @@ public class MainService extends Service {
     TextView textView0;//时间显示
     ProgressBar progressBar0;//进度条
 
-    Calendar calendar = Calendar.getInstance();
-
-
 
     int millisecond = 0;
+    int clickSecond = 900;
 
 
     //状态栏高度.
-    int statusBarHeight = -1;
+    int statusBarHeight = 0;
 
     //不与Activity进行绑定.
     @Override
@@ -66,6 +64,19 @@ public class MainService extends Service {
         super.onCreate();
         Log.i(TAG,"MainService Created");
         createToucher();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        clickSecond=intent.getExtras().getInt("clickSecond");
+
+        progressBar0 = (ProgressBar)toucherLayout.findViewById(R.id.progressBar0);
+        progressBar0.setSecondaryProgress(clickSecond);
+
+        Log.i(TAG,"MainService Created:"+params);
+        return super.onStartCommand(intent, flags, startId);
+
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -92,9 +103,9 @@ public class MainService extends Service {
         params.x = 0;
         params.y = 0;
 
-        //设置悬浮窗口长宽数据.
-        params.width = 500;
-        params.height = 200;
+//        //设置悬浮窗口长宽数据.
+        params.width = 540;
+        params.height = 150;
 
         LayoutInflater inflater = LayoutInflater.from(getApplication());
         //获取浮动窗口视图所在布局.
@@ -137,7 +148,6 @@ public class MainService extends Service {
 
 
 
-
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
@@ -152,20 +162,15 @@ public class MainService extends Service {
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss:SSS");
                         long timeStamp = System.currentTimeMillis();
                         Date date = new Date(timeStamp);
-                        textView0.setText(simpleDateFormat.format(date));
-
-                        //获取当前毫秒数
-                        //1.时间戳截取后三位即为毫秒数
-                        String mill= timeStamp+"";
-                        String m= mill.substring(mill.length()-3);
-
-                        //2.时间戳对1000取余即为毫秒数
                         millisecond = new Long((timeStamp % 1000)).intValue();
 
-                        Log.i(TAG,"millisecond--1:" + millisecond);
-                        Log.i(TAG,"millisecond--2:" + simpleDateFormat.format(date));
-                        Log.i(TAG,"millisecond--3:" + m);
+                        textView0.setText(simpleDateFormat.format(date));
+
                         progressBar0.setProgress(millisecond);
+
+                        Log.i(TAG,"millisecond--2:" + simpleDateFormat.format(date));
+                        Log.i(TAG,"millisecond--1:" + millisecond);
+                        Log.i(TAG,"clickSecond--1:" + clickSecond);
 
 
 

@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/backView0"
-    android:layout_width="300dp"
-    android:layout_height="200dp"
-    android:background="#7F00BFFF">
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:background="#000000">
 
     <TextView
         android:id="@+id/textView0"
@@ -14,6 +14,7 @@
         android:layout_marginTop="10dp"
         android:text="悬浮窗口"
         android:textAlignment="center"
+        android:textColor="#FF0000"
         android:textSize="30dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,10 +26,13 @@
         android:id="@+id/progressBar0"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="31dp"
+        android:layout_height="10dp"
         android:max="999"
         android:progress="500"
+        android:progressBackgroundTint="#FFFFFF"
+        android:progressTint="#FF0000"
         android:secondaryProgress="800"
+        android:secondaryProgressTint="#FFFF00"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

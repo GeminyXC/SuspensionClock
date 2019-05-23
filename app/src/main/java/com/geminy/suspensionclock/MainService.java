@@ -2,8 +2,10 @@ package com.geminy.suspensionclock;
 
 import android.content.Intent;
 import android.app.Service;
+import android.content.res.Resources;
 import android.os.IBinder;
 import android.support.constraint.ConstraintLayout;
+import android.util.TypedValue;
 import android.view.WindowManager;
 import android.util.Log;
 import android.annotation.SuppressLint;
@@ -14,11 +16,14 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.os.SystemClock;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,14 +34,20 @@ public class MainService extends Service {
     private static final String TAG = "MainService";
 
     ConstraintLayout toucherLayout;
-    WindowManager.LayoutParams params;
+
     WindowManager windowManager;
+    WindowManager.LayoutParams params;
 
-    android.support.constraint.ConstraintLayout backView0;
-    Button button0;
-    TextView textView0;
 
-    int count = 0;
+    android.support.constraint.ConstraintLayout backView0;//悬浮窗背景
+    TextView textView0;//时间显示
+    ProgressBar progressBar0;//进度条
+
+    Calendar calendar = Calendar.getInstance();
+
+
+
+    int millisecond = 0;
 
 
     //状态栏高度.
@@ -82,8 +93,8 @@ public class MainService extends Service {
         params.y = 0;
 
         //设置悬浮窗口长宽数据.
-        params.width = 300;
-        params.height = 300;
+        params.width = 500;
+        params.height = 200;
 
         LayoutInflater inflater = LayoutInflater.from(getApplication());
         //获取浮动窗口视图所在布局.
@@ -118,44 +129,12 @@ public class MainService extends Service {
 
         });
 
-        //浮动窗口按钮.
-        button0 = (Button) toucherLayout.findViewById(R.id.button0);
-
-        button0.setOnClickListener((v)->{
-
-            long[] hints = new long[2];
-            Log.i(TAG,"点击了");
-            System.arraycopy(hints,1,hints,0,hints.length -1);
-            hints[hints.length -1] = SystemClock.uptimeMillis();
-            if (SystemClock.uptimeMillis() - hints[0] >= 700)
-            {
-                Log.i(TAG,"要执行");
-                Toast.makeText(MainService.this,"连续点击两次以退出",Toast.LENGTH_SHORT).show();
-            }else
-            {
-                Log.i(TAG,"即将关闭");
-                stopSelf();
-            }
-
-        });
-
-
-
-        button0.setOnTouchListener((v,event)->{
-
-//            params.x = (int) event.getRawX() - 150;
-//            params.y = (int) event.getRawY() - 150 - statusBarHeight;
-//            windowManager.updateViewLayout(toucherLayout,params);
-            return false;
-
-        });
-
-
-
 
 
 
         textView0 = (TextView)toucherLayout.findViewById(R.id.textView0);
+        progressBar0 = (ProgressBar)toucherLayout.findViewById(R.id.progressBar0);
+
 
 
 
@@ -169,13 +148,24 @@ public class MainService extends Service {
                     @Override
                     public void run() {
 
-//                        textView0.setText(count+"");
-//                        count ++;
 
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss:SSS");
-                        Date date = new Date(System.currentTimeMillis());
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss:SSS");
+                        long timeStamp = System.currentTimeMillis();
+                        Date date = new Date(timeStamp);
                         textView0.setText(simpleDateFormat.format(date));
 
+                        //获取当前毫秒数
+                        //1.时间戳截取后三位即为毫秒数
+                        String mill= timeStamp+"";
+                        String m= mill.substring(mill.length()-3);
+
+                        //2.时间戳对1000取余即为毫秒数
+                        millisecond = new Long((timeStamp % 1000)).intValue();
+
+                        Log.i(TAG,"millisecond--1:" + millisecond);
+                        Log.i(TAG,"millisecond--2:" + simpleDateFormat.format(date));
+                        Log.i(TAG,"millisecond--3:" + m);
+                        progressBar0.setProgress(millisecond);
 
 
 
@@ -190,15 +180,8 @@ public class MainService extends Service {
 
     }
 
-    @Override
-    public void onDestroy()
-    {
-        if (button0 != null)
-        {
-            windowManager.removeView(toucherLayout);
-        }
-        super.onDestroy();
-    }
+
+
 
 
 }

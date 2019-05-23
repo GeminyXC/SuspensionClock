@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/backView0"
     android:layout_width="300dp"
-    android:layout_height="300dp"
+    android:layout_height="200dp"
     android:background="#7F00BFFF">
 
     <TextView
@@ -13,18 +13,33 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="悬浮窗口"
+        android:textAlignment="center"
+        android:textSize="30dp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="点击"
+    <ProgressBar
+        android:id="@+id/progressBar0"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="31dp"
+        android:max="999"
+        android:progress="500"
+        android:secondaryProgress="800"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView0" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!--<Button-->
+    <!--android:id="@+id/button0"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:text="点击"-->
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:layout_constraintStart_toStartOf="parent"-->
+    <!--app:layout_constraintTop_toBottomOf="@id/textView0" />-->
 </android.support.constraint.ConstraintLayout>

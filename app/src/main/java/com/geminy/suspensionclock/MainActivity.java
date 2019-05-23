@@ -26,10 +26,9 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button).setOnClickListener(v -> {
 
 
-            Log.i(TAG, "editTex:" + editText.getText().getClass());
             if(TextUtils.isEmpty(editText.getText())) return;
-            int clickSecond = Integer.valueOf(editText.getText().toString());
-            if (clickSecond < 0 || clickSecond > 999) {
+            int presetMillisecond = Integer.valueOf(editText.getText().toString());
+            if (presetMillisecond < 0 || presetMillisecond > 999) {
                 Toast.makeText(MainActivity.this, "时间应在0到999之间", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -50,11 +49,9 @@ public class MainActivity extends AppCompatActivity {
              */
             if (Settings.canDrawOverlays(MainActivity.this)) {
 
-//                Toast.makeText(MainActivity.this,"已开启Toucher",Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, MainService.class);
-//                intent.putExtra("clickSecond",clickSecond);
                 Bundle bundle=new Bundle();
-                bundle.putInt("clickSecond",clickSecond);
+                bundle.putInt("presetMillisecond",presetMillisecond);
                 intent.putExtras(bundle);
                 startService(intent);
 //                finish();

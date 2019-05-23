@@ -10,10 +10,24 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        release {
+            storeFile file("${rootDir.path}/keystores/suspensionClock.jks")
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            //配置签名
+            signingConfig signingConfigs.release
+        }
+        debug {
+            //配置签名
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {

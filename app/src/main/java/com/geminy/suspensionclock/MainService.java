@@ -104,7 +104,7 @@ public class MainService extends Service {
         params.y = 0;
 
 //        //设置悬浮窗口长宽数据.
-        params.width = 540;
+//        params.width = 540;
         params.height = 150;
 
         LayoutInflater inflater = LayoutInflater.from(getApplication());

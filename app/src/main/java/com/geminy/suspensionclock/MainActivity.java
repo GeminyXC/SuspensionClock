@@ -1,6 +1,7 @@
 package com.geminy.suspensionclock;
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +9,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.util.HashMap;
+
+import utils.CipherUtils;
+import utils.GeneralUtils;
+import utils.GetIMEIUtils;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,15 +31,42 @@ public class MainActivity extends AppCompatActivity {
 
         editText = findViewById(R.id.editText);
 
+        String presetMillisecondString = GeneralUtils.readData(this, "presetMillisecond");
+
+        editText.setText(presetMillisecondString);
+
+
         findViewById(R.id.button).setOnClickListener(v -> {
 
+            //检测是否已获取用户手机的IMEI
+            HashMap<String, Object> map = GetIMEIUtils.getIMEI(this);
+            boolean isAllowed = Boolean.parseBoolean(map.get("isAllowed").toString());
+            if (!isAllowed) {
+                Toast.makeText(MainActivity.this, "请授权以获取手机相关信息", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            if(TextUtils.isEmpty(editText.getText())) return;
+            String encryptText = CipherUtils.imeiTwiceEncrypt(MainActivity.this, "");
+            String decryptText = CipherUtils.imeiTwiceDecrypt(MainActivity.this, encryptText);
+
+
+            //检测用户输入是否为空
+            if (TextUtils.isEmpty(editText.getText())) {
+                Toast.makeText(MainActivity.this, "请输入预设时间", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            //获取用户输入的预设时间
             int presetMillisecond = Integer.valueOf(editText.getText().toString());
+
+            //检测数据输入是否合法
             if (presetMillisecond < 0 || presetMillisecond > 999) {
                 Toast.makeText(MainActivity.this, "时间应在0到999之间", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            //存储用户输入的合法数据
+            GeneralUtils.writeData(this, "presetMillisecond", editText.getText().toString());
 
 
             //当AndroidSDK>=23及Android版本6.0及以上时，需要获取OVERLAY_PERMISSION.
@@ -50,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
             if (Settings.canDrawOverlays(MainActivity.this)) {
 
                 Intent intent = new Intent(MainActivity.this, MainService.class);
-                Bundle bundle=new Bundle();
-                bundle.putInt("presetMillisecond",presetMillisecond);
+                Bundle bundle = new Bundle();
+                bundle.putInt("presetMillisecond", presetMillisecond);
                 intent.putExtras(bundle);
                 startService(intent);
 //                finish();

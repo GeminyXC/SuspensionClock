@@ -87,10 +87,10 @@ public class MainService extends Service {
         } else {
             params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
         }
-        //设置效果为背景透明.
-//        params.format = PixelFormat.RGBA_8888;
-        //设置flags.不可聚焦及不可使用按钮对悬浮窗进行操控.
-//        params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+//        设置效果为背景透明.
+        params.format = PixelFormat.RGBA_8888;
+//        设置flags.不可聚焦及不可使用按钮对悬浮窗进行操控.
+        params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
 
         //设置窗口初始停靠位置.
         params.gravity = Gravity.LEFT | Gravity.TOP;

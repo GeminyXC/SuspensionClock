@@ -3,9 +3,13 @@ package utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class GeneralUtils {
 
-    //1）写入数据：
+
+    //1）写入数据：目前写入的数据有：inviteCode、presetMillisecond、imei
     public static void writeData(Context content, String key, String value) {
 
         //步骤1：创建一个SharedPreferences对象
@@ -43,6 +47,16 @@ public class GeneralUtils {
         editor.clear();
         editor.commit();
 
+    }
+
+    public static String getDateString(Context context, String timeStampString){
+
+        long timeStamp = Long.parseLong(timeStampString);//Long.valueOf(timeStampString);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date(timeStamp);
+        String dateString = simpleDateFormat.format(date);
+
+        return  dateString;
     }
 
 }

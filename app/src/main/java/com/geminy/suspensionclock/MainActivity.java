@@ -29,14 +29,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        editText = findViewById(R.id.editText);
 
-        String presetMillisecondString = GeneralUtils.readData(this, "presetMillisecond");
+        //设置按钮
+        findViewById(R.id.topButton).setOnClickListener(v -> {
 
-        editText.setText(presetMillisecondString);
-
-
-        findViewById(R.id.button).setOnClickListener(v -> {
 
             //检测是否已获取用户手机的IMEI
             HashMap<String, Object> map = GetIMEIUtils.getIMEI(this);
@@ -46,12 +42,30 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            String encryptText = CipherUtils.imeiTwiceEncrypt(MainActivity.this, "");
-            String decryptText = CipherUtils.imeiTwiceDecrypt(MainActivity.this, encryptText);
+            Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+            startActivity(intent);
+
+        });
+
+        //读取用户上次预设时间，并填入输入框
+        editText = findViewById(R.id.editText);
+        String presetMillisecondString = GeneralUtils.readData(this, "presetMillisecond");
+        editText.setText(presetMillisecondString);
+
+
+        findViewById(R.id.button).setOnClickListener(v -> {
+
+            //检测是否完成注册或者邀请码未失效
+            String inviteCode = GeneralUtils.readData(MainActivity.this,"inviteCode");
+            boolean isValid = CipherUtils.verifyInviteCode(MainActivity.this,inviteCode);
+            if (!isValid) {
+                Toast.makeText(MainActivity.this, "未注册或邀请码失效，请前往'设置'进行基础设置", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
 
             //检测用户输入是否为空
-            if (TextUtils.isEmpty(editText.getText())) {
+            if (TextUtils.isEmpty(editText.getText().toString())) {
                 Toast.makeText(MainActivity.this, "请输入预设时间", Toast.LENGTH_SHORT).show();
                 return;
             }

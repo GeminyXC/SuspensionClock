@@ -3,6 +3,8 @@ package com.geminy.suspensionclock;
 import android.content.Intent;
 import android.app.Service;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.constraint.ConstraintLayout;
 import android.util.TypedValue;
@@ -28,6 +30,8 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import utils.GeneralUtils;
+
 
 public class MainService extends Service {
 
@@ -45,8 +49,10 @@ public class MainService extends Service {
     ProgressBar progressBar0;//进度条
 
 
+    int currentSecond = 0;//当前时间秒数
     int millisecond = 0;//当前时间毫秒数
-    int presetMillisecond = 900;//预设毫秒数
+    int presetMillisecond = 0;//预设毫秒数
+
 
 
     int statusBarHeight = 0;//状态栏高度.
@@ -138,6 +144,10 @@ public class MainService extends Service {
         progressBar0 = (ProgressBar) toucherLayout.findViewById(R.id.progressBar0);
 
 
+
+        String presetMillisecondString = GeneralUtils.readData(this, "presetMillisecond");
+        presetMillisecond = Integer.parseInt(presetMillisecondString);
+
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
@@ -154,13 +164,35 @@ public class MainService extends Service {
                         Date date = new Date(timeStamp);
                         millisecond = new Long((timeStamp % 1000)).intValue();
 
+                        currentSecond = new Long((timeStamp / 1000) % 60).intValue();
+
                         textView0.setText(simpleDateFormat.format(date));
 
                         progressBar0.setProgress(millisecond);
 
-//                        Log.i(TAG, "millisecond--2:" + simpleDateFormat.format(date));
-//                        Log.i(TAG, "millisecond--1:" + millisecond);
-//                        Log.i(TAG, "clickSecond--1:" + presetMillisecond);
+
+                        if (currentSecond == 59 && millisecond >= presetMillisecond){
+
+                            backView0.setBackgroundColor(Color.parseColor("#00FF00"));
+
+                            backView0.postDelayed(() -> {
+                                backView0.setBackgroundColor(Color.parseColor("#000000"));
+                            },1000);
+
+                        }
+//                        else if(currentSecond == 0 && millisecond >= presetMillisecond){
+//                            backView0.setBackgroundColor(Color.parseColor("#000000"));
+//                        }
+
+//                        延迟3秒执行
+//                        new Handler().postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//
+//                            }
+//                        }, 3000);
+
+
 
 
                     }

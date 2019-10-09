@@ -19,7 +19,7 @@ import utils.GetIMEIUtils;
 
 public class SettingActivity extends AppCompatActivity {
 
-    private static final boolean isShowManage = false;
+    private static final boolean isShowManage = true;
 
     Button manageButton;
     TextView registerTextView;
